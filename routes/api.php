@@ -1,8 +1,8 @@
 <?php
 
-use App\Http\Requests\Auth\LoginRequest;
-use App\Http\Requests\Auth\RegisterRequest;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\ContactController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,7 +18,14 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')
     ->middleware('guest')
-    ->group(function(){
-       Route::post('/login', LoginRequest::class);
-       Route::post('/register', RegisterRequest::class);
+    ->group(function () {
+        Route::post('/login', LoginController::class);
+        Route::post('/register', RegisterController::class);
+    });
+
+Route::middleware('auth:sanctum')
+    ->group(function () {
+
+        Route::apiResource('contacts', ContactController::class);
+
     });
