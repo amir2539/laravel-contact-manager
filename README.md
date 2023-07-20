@@ -22,5 +22,12 @@
 - GET api/companies/{company}/contacts (list company contacts paginated)
 - GET api/contacts (list all contacts)
     - Parameters: page, per_page, name, company
+- GET api/contacts/{contact}
 - POST api/contacts
    - Parameters: name, phone_number, email
+- DELETE api/contacts/{contact}
+- PUT api/contacts/{contact}
+    - Parameters: page, per_page, name, company
+- POST api/contacts/{contact}/note
+    - Parameters: note
+- DELETE api/contacts/note/{note}
