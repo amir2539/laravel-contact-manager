@@ -24,7 +24,12 @@ class ContactResource extends JsonResource
             'phone_number' => $this->phone_number,
             'email' => $this->email,
             'address' => $this->address,
-            'company' => $this->whenLoaded('company', fn() => $this->company->name),
+            'company' => $this->whenLoaded('company', function () {
+                return [
+                    'id' => $this->company?->id,
+                    'name' => $this->company?->name
+                ];
+            }),
             'created_at' => $this->created_at?->toISOString(),
             'updated_at' => $this->updated_at?->toISOString()
         ];

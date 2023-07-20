@@ -19,13 +19,11 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('auth')
     ->middleware('guest')
     ->group(function () {
-        Route::post('/login', LoginController::class);
+        Route::post('/login', LoginController::class)->name('login');
         Route::post('/register', RegisterController::class);
     });
 
 Route::middleware('auth:sanctum')
     ->group(function () {
-
         Route::apiResource('contacts', ContactController::class);
-
     });

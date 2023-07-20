@@ -11,7 +11,7 @@ if (!function_exists('apiResponse')) {
         array|JsonResource $data = [],
     ): JsonResponse {
         $data = [
-            'status' => $code === Response::HTTP_OK,
+            'success' => $code === Response::HTTP_OK,
             'message' => $message,
             'data' => $data
         ];

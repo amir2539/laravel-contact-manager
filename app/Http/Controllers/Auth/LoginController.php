@@ -19,7 +19,7 @@ class LoginController extends Controller
         /** @var User $user */
         $user = User::where([
             'email' => $request->email
-        ])->first;
+        ])->first();
 
         if (is_null($user) || !Hash::check($request->password, $user->password)) {
             return apiResponse(Response::HTTP_BAD_REQUEST, 'Invalid email or password');

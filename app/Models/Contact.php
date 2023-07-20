@@ -23,8 +23,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class Contact extends Model
 {
-    use HasFactory;
-
     protected $fillable = [
         'name',
         'phone_number',

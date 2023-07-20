@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Contact\SearchContactsRequest;
+use App\Http\Requests\Contact\ShowContactRequest;
 use App\Http\Requests\Contact\StoreContactRequest;
+use App\Http\Requests\Contact\UpdateContactRequest;
 use App\Http\Resources\Contact\ContactResource;
 use App\Models\Company;
+use App\Models\Contact;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class ContactController extends Controller
 {
@@ -18,7 +21,6 @@ class ContactController extends Controller
     {
         $perPage = $request->get('per_page', 10);
 
-        /** @var  $contacts */
         $contacts = $request->user()
             ->contacts()
             ->when($request->name, function (Builder $query, string $name) {
@@ -30,7 +32,7 @@ class ContactController extends Controller
                 });
             })
             ->with('company')
-            ->paginte($perPage);
+            ->paginate($perPage);
 
         $data = [
             'contacts' => ContactResource::collection($contacts),
@@ -49,14 +51,15 @@ class ContactController extends Controller
     {
         $contactCredentials = $request->only('phone_number', 'email', 'name', 'address');
 
-        $company = Company::firstOrCreate([
-            'name' => $request->company,
-        ]);
+        if ($request->company) {
+            $company = Company::firstOrCreate([
+                'name' => $request->company,
+            ]);
 
-        $request->user()->contacts()->create([
-            ...$contactCredentials,
-            'company_id' => $company->id,
-        ]);
+            $contactCredentials['company_id'] = $company->id;
+        }
+
+        $request->user()->contacts()->create($contactCredentials);
 
         return apiResponse();
     }
@@ -64,24 +67,41 @@ class ContactController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(ShowContactRequest $request, Contact $contact)
     {
-        //
+        $contact->load('company');
+        $data = new ContactResource($contact);
+
+        return apiResponse(code: Response::HTTP_CREATED, data: $data);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateContactRequest $request, Contact $contact)
     {
-        //
+        $contactCredentials = $request->only('phone_number', 'email', 'name', 'address');
+
+        if ($request->company) {
+            $company = Company::firstOrCreate([
+                'name' => $request->company,
+            ]);
+
+            $contactCredentials['company_id'] = $company->id;
+        }
+
+        $contact->update($contactCredentials);
+
+        return apiResponse();
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(ShowContactRequest $request, Contact $contact)
     {
-        //
+        $contact->delete();
+
+        return apiResponse();
     }
 }
