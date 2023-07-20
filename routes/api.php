@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ContactNoteController;
 use Illuminate\Support\Facades\Route;
@@ -31,5 +32,11 @@ Route::middleware('auth:sanctum')
             ->group(function () {
                 Route::post('/{contact}/note', [ContactNoteController::class, 'store']);
                 Route::delete('/note/{note}', [ContactNoteController::class, 'destroy']);
+            });
+
+        Route::prefix('companies')
+            ->group(function () {
+                Route::get('/', [CompanyController::class, 'index']);
+                Route::get('/{company}/contacts', [CompanyController::class, 'contacts']);
             });
     });
