@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\RegisterRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +16,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::prefix('auth')
+    ->middleware('guest')
+    ->group(function(){
+       Route::post('/login', LoginRequest::class);
+       Route::post('/register', RegisterRequest::class);
+    });
