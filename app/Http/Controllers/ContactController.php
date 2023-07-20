@@ -31,7 +31,7 @@ class ContactController extends Controller
                     $companyQuery->where('name', 'LIKE', "%$company%");
                 });
             })
-            ->with('company')
+            ->with('company', 'notes')
             ->paginate($perPage);
 
         $data = [
@@ -69,7 +69,7 @@ class ContactController extends Controller
      */
     public function show(ShowContactRequest $request, Contact $contact)
     {
-        $contact->load('company');
+        $contact->load('company', 'notes');
         $data = new ContactResource($contact);
 
         return apiResponse(code: Response::HTTP_CREATED, data: $data);

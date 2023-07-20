@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\ContactNoteController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,4 +27,9 @@ Route::prefix('auth')
 Route::middleware('auth:sanctum')
     ->group(function () {
         Route::apiResource('contacts', ContactController::class);
+        Route::prefix('contacts')
+            ->group(function () {
+                Route::post('/{contact}/note', [ContactNoteController::class, 'store']);
+                Route::delete('/note/{note}', [ContactNoteController::class, 'destroy']);
+            });
     });

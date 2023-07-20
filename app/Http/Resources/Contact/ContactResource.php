@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Contact;
 
+use App\Http\Resources\Contant\ContactNotesResource;
 use App\Models\Contact;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -30,6 +31,7 @@ class ContactResource extends JsonResource
                     'name' => $this->company?->name
                 ];
             }),
+            'notes' => $this->whenLoaded('notes', fn()=> ContactNotesResource::collection($this->notes)),
             'created_at' => $this->created_at?->toISOString(),
             'updated_at' => $this->updated_at?->toISOString()
         ];
